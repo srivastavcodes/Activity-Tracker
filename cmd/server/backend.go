@@ -57,33 +57,25 @@ func (b *backend) serve() error {
 		if err != nil {
 			shutdownError <- err
 		}
-		b.logger.Info().
-			Str("addr", srv.Addr).
+		b.logger.Info().Str("addr", srv.Addr).
 			Msgf("completing background tasks")
 
 		b.wg.Wait()
 		shutdownError <- nil
 	}()
-	b.logger.Info().
-		Str("addr", srv.Addr).
-		Str("env", b.env).
-		Msgf("server started")
+	b.logger.Info().Str("addr", srv.Addr).
+		Str("env", b.env).Msgf("server started")
 
 	err := srv.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf(
-			"failed to listen on addr=%s: %w",
-			srv.Addr, err,
-		)
+		return fmt.Errorf("failed to listen on addr=%s: %w", srv.Addr, err)
 	}
 	err = <-shutdownError
 	if err != nil {
 		return err
 	}
-	b.logger.Info().
-		Str("addr", srv.Addr).
-		Str("env", b.env).
-		Msgf("server stopped")
+	b.logger.Info().Str("addr", srv.Addr).
+		Str("env", b.env).Msgf("server stopped")
 
 	return nil
 }

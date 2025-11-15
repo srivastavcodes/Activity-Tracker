@@ -3,7 +3,8 @@ include .envrc
 
 .PHONY: run
 run:
-	@go run ./cmd/server
+	@echo "Executing command 'air'..."
+	air
 
 .PHONY: db/mig/new
 db/mig/new:
